@@ -1,0 +1,14 @@
+# Visual Studio files
+.vs/
+out/
+build_vs/
+build/
+*.user
+*.sln
+*.vcxproj
+*.filters
+
+# Compiled binaries
+*.exe
+*.obj
+*.pdb
