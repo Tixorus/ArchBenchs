@@ -54,6 +54,7 @@ int main()
     double tim[] = {0.5, 1, 1.5, 2};
     omp_set_num_threads(6);
     monte_carlo_bermuda_RT_parallel(0,40, 200, 0.7, 1, Ar, 4, tim);
+	std::cout << "\n" << monte_carlo_no_div(0, 100000, 2, 200, 0.7, 1, Ar, 1123415);
 
    /* double *mat = new double[stock_count*(stock_count+1)/2];
     generate_correlation_matrix(stock_count, mat); 
