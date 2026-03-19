@@ -8,4 +8,12 @@ struct Stock
     double dividends = 0; //continuous
 };
 
+struct RetVal
+{
+    int time;
+    double high_est;
+    double low_est;
+    double ans;
+};
+
 #endif // !STOCK_CPP

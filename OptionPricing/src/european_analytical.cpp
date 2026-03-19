@@ -8,7 +8,7 @@
 //https://people.sc.fsu.edu/~jburkardt/cpp_src/toms462/toms462.html
 #include "toms462.hpp"
 
-#include "analytical.hpp"
+#include "european_analytical.hpp"
 
 double calc_real_price(double time, double strike_price, double interest_rate, Stock stock)
 {

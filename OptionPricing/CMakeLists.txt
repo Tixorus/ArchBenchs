@@ -8,10 +8,11 @@ include_directories(include)
 include_directories(external)
 
 set(SOURCES 
-    src/analytical.cpp
-    src/bermuda.cpp 
-    src/numerical.cpp 
-    src/option-pricing-parallel.cpp
+    src/european_analytical.cpp
+    src/bermuda_RT.cpp 
+    src/bermuda_SM.cpp 
+    src/european_numerical.cpp 
+    src/option_pricing_parallel.cpp
     external/toms462.cpp
 )
 

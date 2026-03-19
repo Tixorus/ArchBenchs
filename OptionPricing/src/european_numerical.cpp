@@ -5,14 +5,14 @@
 #include <omp.h>
 #include <cstdio>
 
-#include "numerical.hpp"
+#include "european_numerical.hpp"
 
 //generator values:
 //0 == VSL_BRNG_MCG59;
 //1 == VSL_BRNG_SOBOL;
 //2 == VSL_BRNG_NIEDERR;
 //3 == VSL_BRNG_MT19937
-double monte_carlo_cont_div(int generator, long long paths, double time, double strike_price, double interest_rate, unsigned int stock_count, Stock* stocks, int seed)
+RetVal monte_carlo_cont_div(int generator, long long paths, double time, double strike_price, double interest_rate, unsigned int stock_count, Stock* stocks, int seed)
 {
     double C = 0;
     int buffer = 50000 / stock_count;
@@ -87,10 +87,12 @@ double monte_carlo_cont_div(int generator, long long paths, double time, double 
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = end - start;
     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
-    //std::cout << "Parallel " << (quasi ? "Quasi" : "Pseudo") << " MC finished in: " << duration_ms.count() << " milliseconds\n"; 
-    std::cout << duration_ms.count() << "\n";
+    
+    RetVal ret;
+    ret.ans = C;
+    ret.time = duration_ms.count();
 
-    return C;
+    return ret;
 }
 
 //generator values:
@@ -98,7 +100,7 @@ double monte_carlo_cont_div(int generator, long long paths, double time, double 
 //1 == VSL_BRNG_SOBOL;
 //2 == VSL_BRNG_NIEDERR;
 //3 == VSL_BRNG_MT19937
-double monte_carlo_no_div(int generator, long long paths, double time, double strike_price, double interest_rate, unsigned int stock_count, Stock* stocks, int seed)
+RetVal monte_carlo_no_div(int generator, long long paths, double time, double strike_price, double interest_rate, unsigned int stock_count, Stock* stocks, int seed)
 {
     double C = 0;
     int buffer = 50000 / stock_count;
@@ -140,7 +142,7 @@ double monte_carlo_no_div(int generator, long long paths, double time, double st
             vslSkipAheadStream(stream, thread_id * (paths * stock_count / omp_get_num_threads() + 1) + 1);
         }
 
-#pragma omp for reduction(+:C) schedule(static)
+#pragma omp for reduction(+:C) schedule(static) 
         for (int block = 0; block < paths / buffer; block++)
         {
             double Cbuff = 0;
@@ -170,13 +172,15 @@ double monte_carlo_no_div(int generator, long long paths, double time, double st
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = end - start;
     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
-    //std::cout << "Parallel " << (quasi ? "Quasi" : "Pseudo") << " MC finished in: " << duration_ms.count() << " milliseconds\n"; 
-    std::cout << duration_ms.count() << "\n";
 
-    return C * exp(-interest_rate * time) / 2;
+    RetVal ret;
+    ret.ans = C * exp(-interest_rate * time) / 2;
+    ret.time = duration_ms.count();
+
+    return ret;
 }
 
-double monte_carlo_multivariate(int generator, long long paths, double time, double strike_price, double interest_rate, unsigned int stock_count, Stock* stocks, double* correlation, int seed)
+RetVal monte_carlo_multivariate(int generator, long long paths, double time, double strike_price, double interest_rate, unsigned int stock_count, Stock* stocks, double* correlation, int seed)
 {
     double C = 0;
     int buffer = 50000 / stock_count;
@@ -254,8 +258,10 @@ double monte_carlo_multivariate(int generator, long long paths, double time, dou
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = end - start;
     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
-    //std::cout << "Parallel " << (quasi ? "Quasi" : "Pseudo") << " MC finished in: " << duration_ms.count() << " milliseconds\n"; 
-    std::cout << duration_ms.count() << "\n";
 
-    return C * exp(-interest_rate * time)/2;
+    RetVal ret;
+    ret.ans = C * exp(-interest_rate * time) / 2;
+    ret.time = duration_ms.count();
+
+    return ret;
 }
