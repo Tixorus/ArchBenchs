@@ -1,7 +1,9 @@
 #include <iostream>
 #include <chrono>
 #include "math.h"
+#ifdef USE_MKL
 #include "mkl.h"
+#endif
 #include <omp.h>
 #include <cstdio>
 
@@ -14,10 +16,8 @@ double calc_real_price(double time, double strike_price, double interest_rate, S
 {
     double d1 = (log(stock.S0 / strike_price) + ((interest_rate - stock.dividends + stock.volatility * stock.volatility / 2) * time)) / (stock.volatility * sqrt(time));
     double d2 = d1 - stock.volatility * sqrt(time);
-    double cdfd1 = 0.0;
-    double cdfd2 = 0.0;
-    vdCdfNorm(1, &d1, &cdfd1);
-    vdCdfNorm(1, &d2, &cdfd2);
+    double cdfd1 = 0.5 * (1.0 + erf(d1 / 1.4142135623730951));
+    double cdfd2 = 0.5 * (1.0 + erf(d2 / 1.4142135623730951));
     return stock.S0 * cdfd1 - strike_price * exp((-interest_rate + stock.dividends) * time) * cdfd2;
 }
 

@@ -1,0 +1,3 @@
+[submodule "OptionPricing/external/OpenRAND"]
+	path = OptionPricing/external/OpenRAND
+	url = https://github.com/msu-sparta/OpenRAND.git

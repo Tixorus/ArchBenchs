@@ -7,19 +7,26 @@ SET(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories(include)
 include_directories(external)
 
+
 set(SOURCES 
     src/european_analytical.cpp
     src/bermuda_RT.cpp 
     src/bermuda_SM.cpp 
     src/european_numerical.cpp 
     src/option_pricing_parallel.cpp
+    src/european_numerical_risc.cpp
     external/toms462.cpp
 )
 
 find_package(MKL REQUIRED)
 find_package(OpenMP REQUIRED)
 
+
 add_executable(${PROJECT_NAME} ${SOURCES})
+
+#target_compile_definitions(${PROJECT_NAME} PRIVATE USE_MKL)
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
     MKL::MKL

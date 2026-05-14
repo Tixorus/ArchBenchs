@@ -2,10 +2,10 @@
 #define NUMERICAL_CPP
 #include "stock.hpp"
 
-RetVal monte_carlo_cont_div(int generator, long long paths, double time, double strike_price, double interest_rate, unsigned int stock_count, Stock* stocks, int seed);
+RetVal monte_carlo_cont_div(int generator, long long paths, Option_EU option, double interest_rate, uint64_t seed);
 
-RetVal monte_carlo_no_div(int generator, long long paths, double time, double strike_price, double interest_rate, unsigned int stock_count, Stock* stocks, int seed);
+RetVal monte_carlo_no_div(int generator, long long paths, Option_EU option, double interest_rate, uint64_t seed);
 
-RetVal monte_carlo_multivariate(int generator, long long paths, double time, double strike_price, double interest_rate, unsigned int stock_count, Stock* stocks, double* correlation, int seed);
+RetVal monte_carlo_multivariate(int generator, long long paths, Option_EU option, double interest_rate, uint64_t seed);
 
 #endif
